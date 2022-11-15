@@ -9,20 +9,19 @@ LinkedList::LinkedList()
 
 LinkedList::~LinkedList()
 {
-  // delete[] pHead;
-  // cout << "nien" << endl;
-  Node *cur = pHead;
-  while (cur)
+  
+  Node *cur = nullptr;
+  while (pHead)
   {
-    // cout << cur->info << endl;
-    // cur = cur->pNext;
-    Node *tmp = cur;
-    cur = cur->pNext;
-    delete tmp;
+    // cout << pHead->info;
+    cur = pHead->pNext;
+    delete pHead;
+    pHead = cur;
   }
+  // cout << endl;
   pHead = pTail = nullptr;
-  curN = 0;
-  cout << "XOA" << endl;
+  // curN = 0;
+  // cout << "XOA" << endl;
 }
 
 Node *LinkedList::CreateNode(const int &n)
@@ -144,12 +143,12 @@ void LinkedList::setCurN(int n)
   curN = n;
 }
 
-Node *LinkedList::getpHead()
+Node *LinkedList::getpHead() const
 {
   return pHead;
 }
 
-Node *LinkedList::getpTail()
+Node *LinkedList::getpTail() const
 {
   return pTail;
 }
@@ -192,7 +191,15 @@ SoNguyenLon::SoNguyenLon(int n)
     setpHeadValue(p->info * (-1));
   }
 }
-ostream &operator<<(ostream &os, SoNguyenLon snl)
+
+SoNguyenLon::SoNguyenLon(const SoNguyenLon& a) : SoNguyenLon(0, 0) {
+  Node* pHead = a.getpHead();
+  while (pHead) {
+    AddTail(pHead->info);
+    pHead = pHead->pNext;
+  }
+}
+ostream &operator<<(ostream &os, SoNguyenLon& snl)
 {
   Node *pHead = snl.getpHead();
   while (pHead)
@@ -200,7 +207,6 @@ ostream &operator<<(ostream &os, SoNguyenLon snl)
     os << pHead->info;
     pHead = pHead->pNext;
   }
-
   return os;
 }
 
@@ -216,7 +222,7 @@ SoNguyenLon::SoNguyenLon(int m, int n)
   }
 }
 
-int LinkedList::getCurN()
+int LinkedList::getCurN() const 
 {
   return curN;
 }
@@ -246,7 +252,7 @@ bool operator>(SoNguyenLon a, SoNguyenLon b)
   return true;
 }
 
-SoNguyenLon operator-(SoNguyenLon a, SoNguyenLon b)
+SoNguyenLon operator-(const SoNguyenLon& a, const SoNguyenLon& b)
 {
   SoNguyenLon reverseA(0, 0);
   SoNguyenLon reverseB(0, 0);
@@ -271,6 +277,7 @@ SoNguyenLon operator-(SoNguyenLon a, SoNguyenLon b)
   {
     reverseB.AddTail(0);
   }
+  // cout << reverseA << " " << reverseB << endl;
   Node *first = reverseA.getpHead();
   Node *second = reverseB.getpHead();
   SoNguyenLon res(0, 0);
@@ -311,6 +318,7 @@ SoNguyenLon operator-(SoNguyenLon a, SoNguyenLon b)
     res1.setpHeadValue(res1.getpHead()->info * (-1));
     return res1;
   }
+  
   return res;
 }
 
@@ -378,13 +386,29 @@ void LinkedList::setpHead(Node *pHead)
 {
   this->pHead = pHead;
 }
-const SoNguyenLon &SoNguyenLon::operator=(SoNguyenLon a)
+SoNguyenLon SoNguyenLon::operator=(const SoNguyenLon& a)
 {
   if (this == &a)
     return *this;
-  this->setpHead(a.getpHead());
-  this->setpTail(a.getpTail());
-  this->setCurN(a.getCurN());
+  
+  Node* del = NULL;
+  Node* pHead = getpHead();
+
+  while (pHead != nullptr)
+  {
+      del = pHead->pNext;
+      delete pHead;
+      pHead = del;
+  }
+  setCurN(0); 
+  setpHead(nullptr);
+  setpTail(nullptr);
+  Node* other_cur = a.getpHead();
+  while (other_cur != NULL) {
+      AddTail(other_cur->info);
+      other_cur = other_cur->pNext;
+  }
+
   return *this;
 }
 SoNguyenLon operator-(SoNguyenLon a, const int &n)
@@ -475,19 +499,19 @@ SoNguyenLon operator*(SoNguyenLon a, SoNguyenLon b)
 int main()
 {
   SoNguyenLon snl1;
-  // SoNguyenLon snl2(44667733);
-  // SoNguyenLon snl3(5, 9);
-  // SoNguyenLon snl4(7, 30);
-  // SoNguyenLon snl5 = snl3 - snl2;
-  // SoNguyenLon snl6 = 1098765432 - snl2;
-  // SoNguyenLon snl7 = snl4 - snl3 + 123456789;
-  // SoNguyenLon snl8 = snl2 * snl3;
-  cout << snl1 << endl;
-  //      << snl2 << endl
-  //      << snl3 << endl;
-  // cout << snl4 << endl;
-  // cout << snl5 << endl
-  //      << snl6 << endl;
-  // cout << snl7 << endl
-  //      << snl8 << endl;
+  SoNguyenLon snl2(44667733);
+  SoNguyenLon snl3(5, 9);
+  SoNguyenLon snl4(7, 30);
+  SoNguyenLon snl5 = snl3 - snl2;
+  SoNguyenLon snl6 = 1098765432 - snl2;
+  SoNguyenLon snl7 = snl4 - snl3 + 123456789;
+  SoNguyenLon snl8 = snl2 * snl3;
+  cout << snl1 << endl
+       << snl2 << endl
+       << snl3 << endl;
+  cout << snl4 << endl;
+  cout << snl5 << endl
+       << snl6 << endl;
+  cout << snl7 << endl
+       << snl8 << endl;
 }
