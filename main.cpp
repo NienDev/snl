@@ -9,7 +9,7 @@ LinkedList::LinkedList()
 
 LinkedList::~LinkedList()
 {
-  
+
   Node *cur = nullptr;
   while (pHead)
   {
@@ -24,13 +24,13 @@ LinkedList::~LinkedList()
   // cout << "XOA" << endl;
 }
 
-Node *LinkedList::CreateNode(const int &n)
+Node *LinkedList::CreateNode(const long long int &n)
 {
   Node *p = new Node{n, nullptr};
   return p;
 }
 
-Node *LinkedList::AddHead(const int &n)
+Node *LinkedList::AddHead(const long long int &n)
 {
   Node *newNode = CreateNode(n);
   if (pHead == nullptr)
@@ -46,7 +46,7 @@ Node *LinkedList::AddHead(const int &n)
   return pHead;
 }
 
-Node *LinkedList::AddTail(const int &n)
+Node *LinkedList::AddTail(const long long int &n)
 {
   Node *newNode = CreateNode(n);
   if (pHead == nullptr)
@@ -72,9 +72,9 @@ ostream &operator<<(ostream &os, const LinkedList &ll)
   return os;
 }
 
-int &LinkedList::operator[](const int &i)
+long long int &LinkedList::operator[](const long long int &i)
 {
-  int j = i;
+  long long int j = i;
   if (j < 0)
     j = 0;
   if (j >= curN)
@@ -82,13 +82,13 @@ int &LinkedList::operator[](const int &i)
     j = curN - 1;
   }
   Node *cur = pHead;
-  int count = 0;
+  long long int count = 0;
   while (count < j)
   {
     count++;
     cur = cur->pNext;
   }
-  return cur->info; // why do we need to return int & ? in my opinion, int itself will return a value, int & will return a pointer to that value but that value is the current element with specific index in an array so we can easily modify it when we found it.
+  return cur->info; // why do we need to return long long int & ? in my opinion, long long int itself will return a value, long long int & will return a polong long inter to that value but that value is the current element with specific index in an array so we can easily modify it when we found it.
   // ? what if i exceed the number of nodes we have???
 }
 
@@ -133,12 +133,12 @@ Node *LinkedList::RemoveTail()
   return newNode;
 }
 
-void LinkedList::setpHeadValue(int n)
+void LinkedList::setpHeadValue(long long int n)
 {
   pHead->info = n;
 }
 
-void LinkedList::setCurN(int n)
+void LinkedList::setCurN(long long int n)
 {
   curN = n;
 }
@@ -172,8 +172,14 @@ SoNguyenLon::~SoNguyenLon() {}
 // }
 // }
 
-SoNguyenLon::SoNguyenLon(int n)
+SoNguyenLon::SoNguyenLon(long long int n)
 {
+  if (n == 0)
+  {
+    SoNguyenLon res;
+    *this = res;
+    return;
+  }
   setpHead(nullptr);
   setpTail(nullptr);
   setCurN(0);
@@ -188,18 +194,21 @@ SoNguyenLon::SoNguyenLon(int n)
   if (ok)
   {
     Node *p = getpHead();
-    setpHeadValue(p->info * (-1));
+    if (p)
+      setpHeadValue(p->info * (-1));
   }
 }
 
-SoNguyenLon::SoNguyenLon(const SoNguyenLon& a) : SoNguyenLon(0, 0) {
-  Node* pHead = a.getpHead();
-  while (pHead) {
+SoNguyenLon::SoNguyenLon(const SoNguyenLon &a) : SoNguyenLon(0, 0)
+{
+  Node *pHead = a.getpHead();
+  while (pHead)
+  {
     AddTail(pHead->info);
     pHead = pHead->pNext;
   }
 }
-ostream &operator<<(ostream &os, SoNguyenLon& snl)
+ostream &operator<<(ostream &os, SoNguyenLon &snl)
 {
   Node *pHead = snl.getpHead();
   while (pHead)
@@ -210,7 +219,7 @@ ostream &operator<<(ostream &os, SoNguyenLon& snl)
   return os;
 }
 
-SoNguyenLon::SoNguyenLon(int m, int n)
+SoNguyenLon::SoNguyenLon(long long int m, long long int n)
 {
   setpHead(nullptr);
   setpTail(nullptr);
@@ -222,15 +231,15 @@ SoNguyenLon::SoNguyenLon(int m, int n)
   }
 }
 
-int LinkedList::getCurN() const 
+long long int LinkedList::getCurN() const
 {
   return curN;
 }
 
 bool operator>(SoNguyenLon a, SoNguyenLon b)
 {
-  int n = a.getCurN();
-  int m = b.getCurN();
+  long long int n = a.getCurN();
+  long long int m = b.getCurN();
   if (n > m)
     return true;
   else if (n < m)
@@ -240,8 +249,8 @@ bool operator>(SoNguyenLon a, SoNguyenLon b)
   Node *p2 = b.getpHead();
   while (p1 && p2)
   {
-    int digit1 = p1->info;
-    int digit2 = p2->info;
+    long long int digit1 = p1->info;
+    long long int digit2 = p2->info;
     if (digit1 > digit2)
       return true;
     else if (digit2 > digit1)
@@ -252,7 +261,7 @@ bool operator>(SoNguyenLon a, SoNguyenLon b)
   return true;
 }
 
-SoNguyenLon operator-(const SoNguyenLon& a, const SoNguyenLon& b)
+SoNguyenLon operator-(const SoNguyenLon &a, const SoNguyenLon &b)
 {
   SoNguyenLon reverseA(0, 0);
   SoNguyenLon reverseB(0, 0);
@@ -281,12 +290,12 @@ SoNguyenLon operator-(const SoNguyenLon& a, const SoNguyenLon& b)
   Node *first = reverseA.getpHead();
   Node *second = reverseB.getpHead();
   SoNguyenLon res(0, 0);
-  int borrow = 0;
-  for (int i = 0; i < reverseA.getCurN(); i++)
+  long long int borrow = 0;
+  for (long long int i = 0; i < reverseA.getCurN(); i++)
   {
-    int digit1 = first->info;
-    int digit2 = second->info;
-    int n = digit1 - digit2 - borrow;
+    long long int digit1 = first->info;
+    long long int digit2 = second->info;
+    long long int n = digit1 - digit2 - borrow;
     if (n >= 0)
     {
       res.AddHead(n);
@@ -308,8 +317,8 @@ SoNguyenLon operator-(const SoNguyenLon& a, const SoNguyenLon& b)
   {
     SoNguyenLon res1(0, 0);
     res1 = res1 + 1;
-    int tmp = 1;
-    for (int i = 0; i < b.getCurN(); i++)
+    long long int tmp = 1;
+    for (long long int i = 0; i < b.getCurN(); i++)
     {
       tmp *= 10;
     }
@@ -318,12 +327,13 @@ SoNguyenLon operator-(const SoNguyenLon& a, const SoNguyenLon& b)
     res1.setpHeadValue(res1.getpHead()->info * (-1));
     return res1;
   }
-  
+
   return res;
 }
 
-SoNguyenLon operator+(SoNguyenLon a, SoNguyenLon b)
+SoNguyenLon operator+(const SoNguyenLon &a, const SoNguyenLon &b)
 {
+  // cout << "vo" << endl;
   SoNguyenLon reverseA(0, 0);
   SoNguyenLon reverseB(0, 0);
 
@@ -350,13 +360,13 @@ SoNguyenLon operator+(SoNguyenLon a, SoNguyenLon b)
   Node *first = reverseA.getpHead();
   Node *second = reverseB.getpHead();
   SoNguyenLon res(0, 0);
-  int borrow = 0;
+  long long int borrow = 0;
 
-  for (int i = 0; i < reverseA.getCurN(); i++)
+  for (long long int i = 0; i < reverseA.getCurN(); i++)
   {
-    int digit1 = first->info;
-    int digit2 = second->info;
-    int n = digit1 + digit2 + borrow;
+    long long int digit1 = first->info;
+    long long int digit2 = second->info;
+    long long int n = digit1 + digit2 + borrow;
     if (n >= 10)
     {
       res.AddHead(n % 10);
@@ -386,38 +396,41 @@ void LinkedList::setpHead(Node *pHead)
 {
   this->pHead = pHead;
 }
-SoNguyenLon SoNguyenLon::operator=(const SoNguyenLon& a)
+
+SoNguyenLon SoNguyenLon::operator=(const SoNguyenLon &a)
 {
   if (this == &a)
     return *this;
-  
-  Node* del = NULL;
-  Node* pHead = getpHead();
+
+  Node *del = NULL;
+  Node *pHead = getpHead();
 
   while (pHead != nullptr)
   {
-      del = pHead->pNext;
-      delete pHead;
-      pHead = del;
+    del = pHead->pNext;
+    delete pHead;
+    pHead = del;
   }
-  setCurN(0); 
+  setCurN(0);
   setpHead(nullptr);
   setpTail(nullptr);
-  Node* other_cur = a.getpHead();
-  while (other_cur != NULL) {
-      AddTail(other_cur->info);
-      other_cur = other_cur->pNext;
+  Node *other_cur = a.getpHead();
+  while (other_cur != NULL)
+  {
+    AddTail(other_cur->info);
+    other_cur = other_cur->pNext;
   }
 
   return *this;
 }
-SoNguyenLon operator-(SoNguyenLon a, const int &n)
+SoNguyenLon operator-(const SoNguyenLon &a, const long long int &n)
 {
   SoNguyenLon b(n);
   return a - b;
 }
-SoNguyenLon operator+(SoNguyenLon a, const int &n)
+SoNguyenLon operator+(const SoNguyenLon &a, const long long int &n)
 {
+
   SoNguyenLon b(n);
   return a + b;
 }
@@ -451,18 +464,18 @@ SoNguyenLon operator*(SoNguyenLon a, SoNguyenLon b)
   Node *second = reverseB.getpHead();
   SoNguyenLon res(0, 0);
 
-  int unit = 0;
+  long long int unit = 0;
   while (first)
   {
 
-    int carry = 0;
-    int digit1 = first->info;
+    long long int carry = 0;
+    long long int digit1 = first->info;
     Node *second_p = second;
     SoNguyenLon tmp(0, 0);
     while (second_p)
     {
-      int digit2 = second_p->info;
-      int n = digit1 * digit2 + carry;
+      long long int digit2 = second_p->info;
+      long long int n = digit1 * digit2 + carry;
 
       if (n >= 10)
       {
@@ -480,7 +493,7 @@ SoNguyenLon operator*(SoNguyenLon a, SoNguyenLon b)
     {
       tmp.AddHead(carry);
     }
-    for (int i = 0; i < unit; i++)
+    for (long long int i = 0; i < unit; i++)
     {
       tmp.AddTail(0);
     }
@@ -509,9 +522,10 @@ int main()
   cout << snl1 << endl
        << snl2 << endl
        << snl3 << endl;
-  cout << snl4 << endl;
-  cout << snl5 << endl
+  cout << snl4 << endl
+       << snl5 << endl
        << snl6 << endl;
   cout << snl7 << endl
-       << snl8 << endl;
+       << snl8 << endl
+       << endl;
 }
